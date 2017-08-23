@@ -4,6 +4,12 @@
  Licensed under The MIT License.
 */
 (function(e) {
+
+  // https://zeit.co/blog/async-and-await
+  function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
     e.fn.notifyMe = function(t) {
         var r = e(this);
         var i = e(this).find("input[name=email]");
@@ -36,12 +42,23 @@
                         }
                     }
                 }).done(function(e) {
+
                     o.hide();
+
                     if (e.status == "success") {
+
                         $(".fa-spinner").addClass("opacity-0").removeClass("fa-spin");
                         $(".message").removeClass("bad-email").addClass("success-full");
                         $(".block-message").addClass("show-block-valid").removeClass("show-block-error");
                         $(".message").html('<p class="notify-valid">Congrats! You are in list.<br>We will inform you as soon as we finish.</p>').fadeIn();
+
+                      sleep(3500).then(() => {
+                        var dlgtrigger = document.querySelector( '[data-dialog]' ),
+                        somedialog = document.getElementById( dlgtrigger.getAttribute( 'data-dialog' ) ),
+                        dlg = new DialogFx( somedialog );
+                        dlg.close();
+                      });
+
                     } else {
                         if (e.type == "ValidationError") {
                             $(".fa-spinner").addClass("opacity-0").removeClass("fa-spin");
@@ -52,12 +69,15 @@
                         }
                     }
                 })
+
             } else {
+
                 $(".fa-spinner").addClass("opacity-0").removeClass("fa-spin");
                 $(".message").addClass("bad-email").removeClass("success-full");
                 $(".block-message").addClass("show-block-error").removeClass("show-block-valid");
                 $(".message").html('<p class="notify-valid">Your e-mail address is incorrect.<br>Please check it and try again.</p>').fadeIn();
                 o.hide();
+
             }
 
             // Reset and hide all messages on .keyup()

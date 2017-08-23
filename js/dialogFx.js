@@ -72,6 +72,19 @@
 		this.el.querySelector( '.dialog__overlay' ).addEventListener( 'click', this.toggle.bind(this) );
 	}
 
+  	DialogFx.prototype.close = function() {
+
+      classie.remove( this.el, 'dialog--open' );
+      classie.add( self.el, 'dialog--close' );
+
+      onEndAnimation( this.el.querySelector( '.dialog__content' ), function() {
+        classie.remove( self.el, 'dialog--close' );
+      } );
+
+      // callback on close
+      this.options.onCloseDialog( this );
+  	};
+
 	DialogFx.prototype.toggle = function() {
 		var self = this;
 		if( this.isOpen ) {
